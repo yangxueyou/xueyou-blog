@@ -1,5 +1,5 @@
-## 基础
+## GIT基础
 
-1. git merge or rebase
+### 1. git merge or rebase
 
 > https://juejin.cn/post/6844903890295455751
