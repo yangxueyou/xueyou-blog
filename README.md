@@ -1,6 +1,6 @@
 # 项 目 地 址
 
-https://yangxueyou.github.io/index/#/
+https://yangxueyou.github.io/xueyou-blog/#/
 
 ## 前端
 
