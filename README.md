@@ -4,11 +4,11 @@ https://yangxueyou.github.io/xueyou-blog/#/
 
 ## 前端
 
-> [面试前端工程师](/beforeInterview/1.md)
+> [前端工程师](/beforeInterview/1.md)
 
 ## 后端
 
-> [面试后端工程师](/afterInterview/1.md)
+> [后端工程师](/afterInterview/1.md)
 
 ## 想法
 

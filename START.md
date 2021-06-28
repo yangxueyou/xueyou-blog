@@ -3,6 +3,10 @@
 ```
 npm i docsify-cli -g
 
-docsify serve interviewDoc
+docsify serve xueyou-blog
 
 ```
+
+# 文档
+
+https://docsify.js.org/#/?id=docsify
