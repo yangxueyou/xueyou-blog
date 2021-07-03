@@ -61,3 +61,12 @@ throttle
 3. input框实时搜索并发送请求展示下拉列表，每隔一秒发送一次请求 (也可做防抖)
 
 ```
+
+### 3. 高阶函数/组件
+
+> https://codesandbox.io/s/gaojiezujian-8kvzu?file=/src/1HocWindowInnerHeight.js
+
+
+### 4. 组件的参数类型校验
+
+> https://www.npmjs.com/package/prop-types
