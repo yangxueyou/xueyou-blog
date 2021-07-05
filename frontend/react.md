@@ -47,3 +47,24 @@ class Child extends Component {
 
 
 ## hooks
+
+
+## 最佳实践
+
+### React中拖放的实现
+
+1. 如何使用React的鼠标事件系统
+
+2. 如何判断拖放开始和结束
+
+3. 如何实现拖放元素的位置移动
+
+4. 拖放状态在组件中如何维护
+
+自己实现：
+
+> https://hd1h2.csb.app/#/react-dnd
+
+已有库：
+
+> https://github.com/atlassian/react-beautiful-dnd

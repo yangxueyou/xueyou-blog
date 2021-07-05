@@ -1,6 +1,4 @@
-# 项 目 地 址
 
-https://yangxueyou.github.io/xueyou-blog/#/
 
 ## 前端
 
@@ -21,6 +19,12 @@ https://yangxueyou.github.io/xueyou-blog/#/
 ## 收藏
 
 > [好用的地址](/favorites/1.md)
+
+## 项目地址
+
+https://yangxueyou.github.io/xueyou-blog/#/
+
+https://hd1h2.csb.app
 
 ## 注意
 
