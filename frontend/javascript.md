@@ -1,6 +1,16 @@
 ## JS基础
 
-### 001.数组的方法
+### 001.数组的总结
+
+#### 0. 创建数组
+
+```
+// bad
+var arr = new Array(1, 2);
+
+// good
+var arr = [1, 2];
+```
 
 #### 1. for
 
@@ -33,6 +43,451 @@ while (l >= 0) {
 }
 ```
 
+#### 3. Array.isArray()
+
+弥补typeof运算符的不足
+
+```
+var arr = [1, 2, 3];
+
+typeof arr // "object"
+Array.isArray(arr) // true
+```
+
+#### 4. valueOf()，toString()
+
+valueOf方法是一个所有对象都拥有的方法，表示对该对象求值。
+
+不同对象的valueOf方法不尽一致，数组的valueOf方法返回数组本身。
+
+```
+var arr = [1, 2, 3];
+arr.valueOf() // [1, 2, 3]
+```
+
+toString方法也是对象的通用方法，数组的toString方法返回数组的字符串形式。
+
+```
+var arr = [1, 2, 3];
+arr.toString() // "1,2,3"
+
+var arr = [1, 2, 3, [4, 5, 6]];
+arr.toString() // "1,2,3,4,5,6"
+```
+
+
+#### 5. push()，pop()
+
+```
+var arr = [];
+
+arr.push(1) // 1 返回数组长度1
+arr.push('a') // 2 返回数组长度2
+arr.push(true, {}) // 4  返回数组长度4
+arr // [1, 'a', true, {}]  原数组被改变
+```
+
+```
+var arr = ['a', 'b', 'c'];
+
+arr.pop() // 'c' 返回被删除的元素c
+arr // ['a', 'b']   原数组被改变
+```
+
+后进先出”的栈结构（stack）
+
+```
+var arr = [];
+arr.push(1, 2);
+arr.push(3);
+arr.pop();
+arr // [1, 2]
+```
+
+#### 6. shift()，unshift()
+
+```
+var a = ['a', 'b', 'c'];
+
+a.shift() // 'a'  返回被删除的元素
+a // ['b', 'c']   原数组被改变
+```
+
+#### 7. join()
+
+```
+var a = [1, 2, 3, 4];
+
+a.join(' ') // '1 2 3 4'
+a.join(' | ') // "1 | 2 | 3 | 4"
+a.join() // "1,2,3,4"  默认用逗号分隔
+
+[undefined, null].join('#')
+// '#'  如果数组成员是undefined或null或空位，会被转成空字符串
+
+['a',, 'b'].join('-')
+// 'a--b'  如果数组成员是undefined或null或空位，会被转成空字符串
+```
+
+通过call方法，这个方法也可以用于字符串或类似数组的对象。
+
+```
+Array.prototype.join.call('hello', '-')
+// "h-e-l-l-o"
+
+var obj = { 0: 'a', 1: 'b', length: 2 };
+Array.prototype.join.call(obj, '-')
+// 'a-b'
+```
+
+#### 8. concat()
+
+然后返回一个新数组，原数组不变
+
+```
+['hello'].concat(['world'])
+// ["hello", "world"]
+
+['hello'].concat(['world'], ['!'])
+// ["hello", "world", "!"]
+
+[].concat({a: 1}, {b: 2})
+// [{ a: 1 }, { b: 2 }]
+
+[2].concat({a: 1})
+// [2, {a: 1}]
+```
+
+除了数组作为参数，concat也接受其他类型的值作为参数，添加到目标数组尾部。
+
+```
+[1, 2, 3].concat(4, 5, 6)
+// [1, 2, 3, 4, 5, 6]
+```
+
+如果数组成员包括对象，concat方法返回当前数组的一个浅拷贝。所谓“浅拷贝”，指的是新数组拷贝的是对象的引用。
+
+```
+var obj = { a: 1 };
+var oldArray = [obj];
+
+var newArray = oldArray.concat();
+
+obj.a = 2;
+newArray[0].a // 2
+```
+
+#### 9. reverse()
+
+返回改变后的数组。注意，该方法将改变原数组
+
+```
+var a = ['a', 'b', 'c'];
+
+a.reverse() // ["c", "b", "a"]
+a // ["c", "b", "a"]
+```
+
+#### 10. slice()
+
+提取目标数组的一部分，返回一个新数组，
+
+原数组不变。
+
+```
+var a = ['a', 'b', 'c'];
+
+a.slice(0) // ["a", "b", "c"]
+a.slice(1) // ["b", "c"]
+a.slice(1, 2) // ["b"]
+a.slice(2, 6) // ["c"]
+a.slice() // ["a", "b", "c"]
+
+a.slice(-2) // ["b", "c"]
+a.slice(-2, -1) // ["b"]
+
+a.slice(4) // []
+a.slice(2, 1) // []
+```
+
+slice()方法的一个重要应用，是将类似数组的对象转为真正的数组。
+
+```
+Array.prototype.slice.call({ 0: 'a', 1: 'b', length: 2 })
+// ['a', 'b']
+
+Array.prototype.slice.call(document.querySelectorAll("div"));
+Array.prototype.slice.call(arguments);
+```
+
+
+#### 11. splice()
+
+删除原数组的一部分成员，并可以在删除的位置添加新的数组成员，返回值是被删除的元素。
+
+注意，该方法会改变原数组。
+
+```
+var a = ['a', 'b', 'c', 'd', 'e', 'f'];
+
+a.splice(4, 2) // ["e", "f"]
+a // ["a", "b", "c", "d"]
+
+a.splice(4, 2, 1, 2) // ["e", "f"]
+a // ["a", "b", "c", "d", 1, 2]
+
+a.splice(-4, 2) // ["c", "d"]
+
+
+var a = [1, 1, 1];
+a.splice(1, 0, 2) // []
+a // [1, 2, 1, 1]
+
+var a = [1, 2, 3, 4];
+a.splice(2) // [3, 4]
+a // [1, 2]
+```
+
+#### 12. sort()
+
+sort方法对数组成员进行排序，默认是按照字典顺序排序。
+
+排序后，原数组将被改变。
+
+```
+['d', 'c', 'b', 'a'].sort()
+// ['a', 'b', 'c', 'd']
+
+[4, 3, 2, 1].sort()
+// [1, 2, 3, 4]
+
+[11, 101].sort()
+// [101, 11]  数值会被先转成字符串，再按照字典顺序进行比较，所以101排在11的前面。
+
+[10111, 1101, 111].sort()
+// [10111, 1101, 111]  数值会被先转成字符串，再按照字典顺序进行比较，所以101排在11的前面。
+
+
+[10111, 1101, 111].sort(function (a, b) {
+  return a - b;  // 大于0，表示第一个成员排在第二个成员后面
+})
+// [111, 1101, 10111]
+```
+
+```
+[
+  { name: "张三", age: 30 },
+  { name: "李四", age: 24 },
+  { name: "王五", age: 28  }
+].sort(function (o1, o2) {
+  return o1.age - o2.age;
+})
+// [
+//   { name: "李四", age: 24 },
+//   { name: "王五", age: 28  },
+//   { name: "张三", age: 30 }
+// ]
+```
+
+
+#### 13. map()
+运行结果组成一个新数组返回，原数组没有变化。
+
+```
+var numbers = [1, 2, 3];
+
+numbers.map(function (n, index, numbers) {
+  return n + 1;
+});
+// [2, 3, 4]
+
+numbers
+// [1, 2, 3]
+```
+
+map()方法的第二个参数，将回调函数内部的this对象，指向arr数组
+
+```
+var arr = ['a', 'b', 'c'];
+
+[1, 2].map(function (e) {
+  return this[e];
+}, arr)
+// ['b', 'c']
+```
+
+map()方法不会跳过undefined和null，但是会跳过空位
+
+```
+var f = function (n) { return 'a' };
+
+[1, undefined, 2].map(f) // ["a", "a", "a"]
+[1, null, 2].map(f) // ["a", "a", "a"]
+[1, , 2].map(f) // ["a", , "a"]
+```
+
+
+#### 14. forEach()
+
+如果数组遍历的目的是为了得到返回值，那么使用map()方法，否则使用forEach()方法。
+
+forEach()方法无法中断执行，总是会将所有成员遍历完。如果希望符合某种条件时，就中断遍历，要使用for循环。
+
+
+```
+function log(element, index, array) {
+  console.log('[' + index + '] = ' + element);
+}
+
+[2, 5, 9].forEach(log);
+// [0] = 2
+// [1] = 5
+// [2] = 9
+```
+
+#### 15. filter()
+
+满足条件的成员组成一个新数组返回。
+
+该方法不会改变原数组。
+
+```
+[1, 2, 3, 4, 5].filter(function (elem) {
+  return (elem > 3);
+})
+// [4, 5]
+```
+
+#### 16. some()，every()
+
+返回一个布尔值，表示判断数组成员是否符合某种条件。
+
+```
+var arr = [1, 2, 3, 4, 5];
+arr.some(function (elem, index, arr) {
+  return elem >= 3;
+});
+// true 只要有一个满足就返回true
+```
+
+```
+var arr = [1, 2, 3, 4, 5];
+arr.every(function (elem, index, arr) {
+  return elem >= 3;
+});
+// false  必须所有的都满足才返回true
+```
+
+注意，对于空数组，some方法返回false，every方法返回true，回调函数都不会执行。
+
+```
+function isEven(x) { return x % 2 === 0 }
+
+[].some(isEven) // false
+[].every(isEven) // true
+```
+
+#### 17. reduce()，reduceRight() 
+
+reduce是从左到右处理（从第一个成员到最后一个成员）
+
+```
+[1, 2, 3, 4, 5].reduce(function (a, b) {
+  console.log(a, b);
+  return a + b;
+})
+// 1 2
+// 3 3
+// 6 4
+// 10 5
+//最后结果：15
+```
+
+如果要对累积变量指定初值，可以把它放在reduce方法和reduceRight方法的第二个参数。
+
+```
+[1, 2, 3, 4, 5].reduce(function (a, b) {
+  return a + b;
+}, 10);
+// 25
+
+
+function add(prev, cur) {
+  return prev + cur;
+}
+
+[].reduce(add)
+// TypeError: Reduce of empty array with no initial value
+[].reduce(add, 1)
+// 1
+```
+
+找出字符长度最长的数组成员
+
+```
+function findLongest(entries) {
+  return entries.reduce(function (longest, entry) {
+    return entry.length > longest.length ? entry : longest;
+  }, '');
+}
+
+findLongest(['aaa', 'bb', 'c']) // "aaa"
+```
+
+#### 18. indexOf()，lastIndexOf()
+
+indexOf方法返回给定元素在数组中第一次出现的位置，如果没有出现则返回-1。
+
+```
+var a = ['a', 'b', 'c'];
+
+a.indexOf('b') // 1
+a.indexOf('y') // -1
+```
+
+indexOf方法还可以接受第二个参数，表示搜索的开始位置。
+
+```
+['a', 'b', 'c'].indexOf('a', 1) // -1
+```
+
+lastIndexOf方法返回给定元素在数组中最后一次出现的位置，如果没有出现则返回-1。
+
+```
+var a = [2, 5, 9, 2];
+a.lastIndexOf(2) // 3
+a.lastIndexOf(7) // -1
+```
+
+注意，这两个方法不能用来搜索NaN的位置，即它们无法确定数组成员是否包含NaN。
+
+这是因为这两个方法内部，使用严格相等运算符（===）进行比较，而NaN是唯一一个不等于自身的值。
+
+```
+[NaN].indexOf(NaN) // -1
+[NaN].lastIndexOf(NaN) // -1
+```
+
+#### 19. 链式使用
+
+```
+var users = [
+  {name: 'tom', email: 'tom@example.com'},
+  {name: 'peter', email: 'peter@example.com'}
+];
+
+users
+.map(function (user) {
+  return user.email;
+})
+.filter(function (email) {
+  return /^t/.test(email);
+})
+.forEach(function (email) {
+  console.log(email);
+});
+// "tom@example.com"
+```
 
 ### 002.对象的方法
 
@@ -331,3 +786,15 @@ function myFunction() {
 ```
 
 #### 7.2 createRange
+
+一旦一个 Range 对象被建立，在使用他的大多数方法之前需要去设置他的临界点。
+
+Range 接口表示一个包含节点与文本节点的一部分的文档片段
+
+```
+var range = document.createRange();
+
+range.setStart(startNode, startOffset);
+range.setEnd(endNode, endOffset);
+
+```
