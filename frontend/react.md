@@ -51,6 +51,17 @@ class Child extends Component {
 
 ## 最佳实践
 
+
+### 页面数据需要来自多个请求
+
+1. 请求之间无依赖关系、可以并发进行
+
+2. 请求有依赖、需要一次进行
+
+3. 请求完成之前、页面显示loading状态 -- loading通过数据的状态来推到、不需要设置一个state
+
+> https://hd1h2.csb.app/#/multiple-request
+
 ### React中拖放的实现
 
 1. 如何使用React的鼠标事件系统
@@ -68,3 +79,18 @@ class Child extends Component {
 已有库：
 
 > https://github.com/atlassian/react-beautiful-dnd
+
+
+### 集成第三方js库
+
+d3.js -- 数据驱动ui
+
+> https://d3js.org/
+
+1. 使用ref获取原生DOM节点引用
+
+2. 手动将组件状态更新到DOM节点
+
+3. 组件销毁时移除原生节点DOM事件
+
+> https://hd1h2.csb.app/#/d3-sample
