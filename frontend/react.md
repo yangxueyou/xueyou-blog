@@ -44,14 +44,19 @@
 
 ### 2. 刷新原理
 
-`Hooks 让组件刷新和传统 class 组件触发刷新的机制是完全一样的，`
-`都是由 state 或者 props 变化触发。Hooks 中的 useState 和 class 中的 setState，背后是同一套实现`
+`自定义 Hooks 中也是通过 useState 这样的内置 Hook 来完成组件的更新的。`
+
+1. 自定义 Hooks 要实现的逻辑，要么用到 state，要么用到副作用，是一定会用到内置 Hooks 或者其它自定义 Hooks 的。
+
+2. 如果对比 Class 组件，state 发生变化，导致重新 render。这个在 Hooks 中是完全一样的，也是 state 发生变化，导致重新 render，只是我们可以在 `Hooks 这样额外的函数里去 set state`，而 Class 组件只能在`当前 Class 中 set state`。
 
 
 ### 3. 组合和继承
 
 `组合让组件交互方式更加简单，只有 props。`
+
 `而继承则比较复杂，因为存在父方法调用或者覆盖等场景。`
+
 `不过因为现在都是函数组件，所以就一定是组合的方式了`
 
 
@@ -134,7 +139,7 @@ useEffect(() => {
 useEffect(() => {}, [deps])
 ```
 
-`即使这个是对象obj={},或者数据对象arr=[{},{}]，做为依赖项，也会等setObj去比较，或者props传值比较`
+即使这个是对象obj={},或者数据对象arr=[{},{}]，做为依赖项，也会等setObj去比较，或者props传值比较
 
 ```
 // 这个时候不会死循环，因为依赖项里没有obj
@@ -206,8 +211,16 @@ function BlogView({ id }) {
 ```
 
 
+6. 问题1
+
+Q：函数体也是每次 render 都会执行，那么，需要每次都会 render 执行的语句是放在 无依赖的 useEffect 中呢，还是直接放在函数体中比较好呢？
+
+
+A：这两种情况的语义是不一样的。useEffect 代表副作用，是在函数 render 完后执行。而函数体中的代码，是直接影响当次 render 的结果。  副作用一定是和当前 render 的结果没关系的，而只是 render 完之后做的一些额外的事情。
 
 ### 7. useCallback
+
+`使用 useCallback 是个比较好的习惯`
 
 ```
 function Counter() {
@@ -230,11 +243,45 @@ function Counter() {
     () => setCount(count + 1),
     [count], // 只有当 count 发生变化时，才会重新创建回调函数
   );
+
+  // 这个性能比上面的高一些
+  // 在这个函数中通过参数就可以直接获取上一次的 state 的值了，而无需将其作为一个依赖项。这样做可以减少一些不必要的回调函数的创建。
+  const handleIncrement = useCallback(() => setCount((q) => q + 2), []);
+
   // ...
   return <button onClick={handleIncrement}>+</button>
 }
 
 ```
+
+
+
+useCallback依赖项是空数组
+
+
+
+```
+import React, { useState, useCallback } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  const handleIncrement = useCallback(
+    () => {
+      console.log('--------第二次执行的时候，这里面会执行，但是不会刷新整个函数')
+      return setCount(count + 1)  // 所以这里适合处理关闭弹窗等事件
+    },
+    [],
+  );
+  // ...
+  console.log(count,'-------只能增加一次，第二次不会增加')
+  return <button onClick={handleIncrement}>+</button>
+}
+```
+
+
+useCallback 的使用时机： 其实是否需要 useCallback ，和函数的复杂度没有必然关系，而是和回调函数绑定到哪个组件有关。这是为了避免因组件属性变化而导致不必要的重新渲染。
+
+
 
 
 
@@ -1092,8 +1139,148 @@ function DataList() {
 
 #### 1. 保证状态最小化
 
-`某些数据如果能从已有的 State 中计算得到，那么我们就应该始终在用的时候去计算，而不要把计算的结果存到某个 State 中`
+某些数据如果能从已有的 State 中计算得到，那么我们就应该始终在用的时候去计算，而不要把计算的结果存到某个 State 中
 
+
+#### 2. 避免中间状态，确保唯一数据源
+
+`不要添加中间状态去维护，增加成本，要直接对唯一数据源进行修改`
+
+![中间状态](../_media/urlStatemid.webp)
+
+
+#### 3. 实战
+
+1. 避免多余的状态：我们不需要在 PriceInput 这个自定义组件内部，去定义状态用于保存的 amount 或者 currency。
+
+2. 找到准确的唯一数据源：这里内部两个基础组件的值，其准确且唯一的来源就是 value 属性，而不是其它的任何中间状态。
+
+![案例](../_media/rmb.webp)
+
+```
+import React, { useState, useCallback } from "react";
+
+function PriceInput({
+  // 定义默认的 value 的数据结构
+  value = { amount: 0, currency: "rmb" },
+  // 默认不处理 onChange 事件
+  onChange = () => {}
+}) {
+  // 定义一个事件处理函数统一处理 amount 或者 currency 变化的场景
+  const handleChange = useCallback(
+    (deltaValue) => {
+      // 直接修改外部的 value 值，而不是定义内部 state
+      onChange({
+        ...value,
+        ...deltaValue
+      });
+    },
+    [value, onChange]
+  );
+  return (
+    <div className="exp-02-price-input">
+      {/* 输入价格的数量 */}
+      <input
+        value={value.amount}
+        onChange={(evt) => handleChange({ amount: evt.target.value })}
+      />
+      {/* 选择货币种类*/}
+      <select
+        value={value.currency}
+        onChange={(evt) => handleChange({ currency: evt.target.value })}
+      >
+        <option value="rmb">RMB</option>
+        <option value="dollar">Dollar</option>
+      </select>
+    </div>
+  );
+}
+```
+
+
+
+### 2. 异步请求
+
+将每个 Get 请求都封装成一个 Hook：这个模式仅适用于 Get 请求的逻辑
+
+其它请求把状态封装成一个请求：useAsync.js
+
+> https://codesandbox.io/s/dongbeidaluantun-8kvzu?file=/src/001/ArticleView.js
+
+
+### 3. 函数组件设计模式
+
+设计模式，就是**针对特定场景，提供一种公认的最佳实践**
+
+比如保证状态的唯一数据源，语义化的拆分复杂组件，等等。熟练掌握这些模式，可以让我们的代码更加简洁直观。
+
+#### 1. 容器模式：实现按条件执行 Hooks
+
+或者通过useEffect的第二个参数/或者在useEffect里面写if
+
+> https://codesandbox.io/s/dongbeidaluantun-8kvzu?file=/src/002/UserList.js:193-201
+
+#### 2. 使用 render props 模式重用 UI 逻辑
+
+Hooks 有一个局限，那就是只能用作数据逻辑的重用，而一旦涉及 UI 表现逻辑的重用，就有些力不从心了，而这正是 render props 擅长的地方。所以，即使有了 Hooks，我们也要掌握 render props 这个设计模式的用法。
+
+> https://codesandbox.io/s/dongbeidaluantun-8kvzu?file=/src/renderPropsHooks/CounterRenderProps.js:570-709
+
+
+> https://codesandbox.io/s/dongbeidaluantun-8kvzu?file=/src/renderPropsHooks/ListWithMore.js:845-855
+
+
+
+### 4. 事件处理
+
+#### 1. 在 React 中使用原生事件
+
+```
+// 骆驼体
+// 只要原生 DOM 有的事件，在 React 中基本都可以使用，只是写法上采用骆驼体就可以了
+<button onClick={handler}>Hello</button> 
+```
+
+#### 2. React 原生事件的原理：合成事件
+
+由于虚拟 DOM 的存在，在 React 中即使绑定一个事件到原生的 DOM 节点，事件也并不是绑定在对应的节点上，而是**所有的事件都是绑定在根节点上**。然后由 React 统一监听和管理，获取事件后再分发到具体的虚拟 DOM 节点上。
+
+===================
+
+在 React 17 之前，所有的事件都是绑定在 document 上的，而从 React 17 开始，**所有的事件都绑定在整个 App 上的根节点上**，这主要是为了以后页面上
+可能存在多版本 React 的考虑。
+
+第一，虚拟 DOM render 的时候， DOM 很可能还没有真实地 render 到页面上，所以无法绑定事件。
+
+第二，React 可以屏蔽底层事件的细节，避免浏览器的兼容性问题。同时呢，对于 React Native 这种不是通过浏览器 render 的运行时，也能提供一致的 API。
+
+
+#### 3. 自定义事件
+
+除了可以从 props 接收参数并用于渲染之外，还很可能**需要和父组件进行交互**，从而反馈信息。这个时候，我们就需要**为组件创建自定义事件**，这也是 React 整个 UI 模型中非常重要的一个环节。
+
+> https://codesandbox.io/s/dongbeidaluantun-8kvzu?file=/src/001/ToggleButton.js:388-400
+
+
+监听键盘
+
+> https://codesandbox.io/s/dongbeidaluantun-8kvzu?file=/src/001/UseKeyPress.js
+
+
+### 5. 项目结构
+
+
+### 6. Form：Hooks 给 Form 处理带来了哪些新变化
+
+
+> https://codesandbox.io/s/dongbeidaluantun-8kvzu?file=/src/001/UncontrolledForm.js
+
+
+> https://codesandbox.io/s/dongbeidaluantun-8kvzu?file=/src/001/UseForm.js
+
+
+
+### 7. 使用浮动层：如何展示对话框，并给对话框传递参数？
 
 
 

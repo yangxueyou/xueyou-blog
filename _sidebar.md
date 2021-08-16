@@ -5,6 +5,7 @@
   - [TypeScript](/frontend/typescript.md)
   - [React](/frontend/react.md)
   - [Git](/frontend/git.md)
+  - [Webpack](/frontend/webpack.md)
   - [Electron](/frontend/electron.md)
   - [Flutter](/frontend/flutter.md)
   - [概念](/frontend/concept.md)
@@ -13,5 +14,8 @@
   - [Nodejs](/backend/node.md)
   - [Docker](/backend/docker.md)
   - [Java](/backend/java.md)
+- 编程基础
+  - [Chrome](/base/chrome.md)
 - 工具
   - [Docsify](/tool/docsify.md)
+  - [Nushell](/tool/Nushell.md)
