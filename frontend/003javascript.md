@@ -805,4 +805,23 @@ range.setEnd(endNode, endOffset);
 ### 1. 深度优先遍历
 
 
+### 2. JS获取对象数组特定key对应的值数组
+
+```
+function getMappingValueArrayOfKey(array,keyName){
+	if(Object.prototype.toString.call(array)=='[object Array]'){
+		return array.map((item,index)=>{
+			return item[keyName]
+		})
+	}
+	return 'null（参数一应为对象数组）';//不是数组
+}
+
+const animals=[{name:'dog',sound:'汪汪'},{name:'pig',sound:'哼哼'},{name:'cat',sound:'喵喵'}]
+
+console.log(getMappingValueArrayOfKey(animals,'name'));//["dog", "pig", "cat"]
+console.log(getMappingValueArrayOfKey(animals,'sound'));//["汪汪", "哼哼", "喵喵"]
+
+```
+
 
