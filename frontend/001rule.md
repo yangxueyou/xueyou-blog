@@ -74,7 +74,7 @@ export { list } from './list'; // 首页 -- 列表管理 -- 列表表头
 为了方便使用，增加了  **[commitizen](https://github.com/commitizen/cz-cli)**  支持，使用  **[cz-customizable](https://github.com/leoforfree/cz-customizable)**  进行配置。支持使用git cz替代git commit。
 
 
-**果要推行代码规范，也可以使用husky来在其他的Git钩子(如pre-push等)上进行eslint等校验。**
+**如果要推行代码规范，也可以使用husky来在其他的Git钩子(如pre-push等)上进行eslint等校验。**
 
 
 ### Commit message 格式

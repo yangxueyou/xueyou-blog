@@ -28,6 +28,16 @@
 
 > https://juejin.cn/post/6844903636749778958
 
+### 2. 案例
+
+#### 1. 子组件传值给父组件
+
+> https://codesandbox.io/s/8kvzu?file=/src/Props/Parent.js
+
+
+#### 2. 父组件获取子组件的form数据
+
+> https://codesandbox.io/s/mvv1f?file=/src/FormRef/index.js
 
 ## 3. hooks基础
 
@@ -1371,17 +1381,19 @@ Antd4
 
 > https://mvv1f.csb.app/#/form-submit
 
+## 9. 三方库
 
+### 1. react-use
 
-## 9. 方法总结
+`一些常用的需求封装成了可重用的 Hooks`
 
-### 1. 子组件传值给父组件
+> https://www.npmjs.com/package/react-use
 
-> https://codesandbox.io/s/8kvzu?file=/src/Props/Parent.js
+1. usePrevious
 
-
-### 2. 父组件获取子组件的form数据
-
-> https://codesandbox.io/s/mvv1f?file=/src/FormRef/index.js
-
+```
+const [count, setCount] = React.useState(0);
+// 获取 cound 的上一个值
+const prevCount = usePrevious(count);
+```
 

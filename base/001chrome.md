@@ -48,3 +48,14 @@
 - JavaScript 阻塞等
 
 其中一项没处理好就可能导致整个页面的延时。
+
+
+## 4. 禁止网站被iframe嵌套
+
+`防止别人镜像自己的网站！`
+
+在响应头里加一个X-Frame-Options: 
+
+- DENY：浏览器拒绝当前页面加载任何Frame页面
+- SAMEORIGIN：frame页面的地址只能为同源域名下的页面
+- ALLOW-FROM origin：origin为允许frame加载的页面地址
