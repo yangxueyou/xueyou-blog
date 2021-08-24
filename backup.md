@@ -7,6 +7,9 @@ async await是有传染性的 —— 当一个函数变为async后，这意味�
 
 
 
+如何判断数据结构类型？
+
+最好的方式是 object.prototype.toString.call，但是自定义的 class 会返回 object，可以用 instanceof 做进一步筛选，typeof基础类型
 
 
 
