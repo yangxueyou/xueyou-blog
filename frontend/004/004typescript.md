@@ -1,5 +1,3 @@
-## TS基础
-
 ### 1. 基础教学
 
 > https://ts.xcatliu.com/basics/primitive-data-types.html
