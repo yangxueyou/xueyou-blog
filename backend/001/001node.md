@@ -1,3 +1,20 @@
+## nodejs 介绍
+
+nodejs 是一个基于 Chrome V8 引擎的 JS 运行环境
+
+nodejs 使用了一个事件驱动、非阻塞 I/O 的模型，使其轻量又高效
+
+nodejs 的包管理工具 NPM，版本管理工具 NVM
+
+
+## nodejs 的应用
+
+1. BFF 层 -- 以前是后端给 html 模版，现在可以在 nodejs 里面去做，还可以做redis缓存，做请求合并，做负载均衡
+
+2. 项目的构建工具 -- webpack
+
+3. 做一些中小型的后端开发 -- 比如不需要分布式，没有密集计算
+
 ## npx
 
 如果当个路径或者全局没有这个命令，会自动的安装，npm 会报错
@@ -74,16 +91,20 @@ $ node test.js a b
 nodejs 的版本管理工具
 
 ```
-// mac 安装 wget/curl
 $ brew install wget
 $ brew install curl
 $ ls -la
-$ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+$ touch ～/.bash_profile
 $ vi .bash_profile
+$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
+$ source ~/.bash_profile
+
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 ```
+
+> https://github.com/nvm-sh/nvm
 
 ## NPM
 

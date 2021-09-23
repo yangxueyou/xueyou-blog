@@ -31,11 +31,7 @@
       - [rollup vs webpack](/frontend/015rollup001.md)
     - Vite
       - [Vite](/frontend/007/003vite.md)
-  - 版本控制
-    - Git
-      - [git merge or rebase](/frontend/006/006git001.md)
-      - [git stash](/frontend/006/006git002.md)
-      - [git clone](/frontend/006/006git003.md)
+  - 包管理
     - Yarn
       - [Yarn](/frontend/003yarn.md)
     - NPM
@@ -62,16 +58,22 @@
     - [随记](/backend/001/999node.md)
   - Docker
     - [基础](/backend/002docker.md)
-  - Java
+  - Go
     - [基础](/backend/003go.md)
 - 编程基础
   - Chrome
     - [基础](/base/001chrome.md)
   - Linux
     - [Linux](/base/002linux.md)
+  - Git
+    - [git merge or rebase](/frontend/006/006git001.md)
+    - [git stash](/frontend/006/006git002.md)
+    - [git clone](/frontend/006/006git003.md)
 - 工具
   - [网址](/tool/001url.md)
   - [Docsify](/tool/002docsify.md)
+  - [Docsify](/tool/003yarn.md)
+  - [Mac](/tool/004mac.md)
 - 面经
   - 前端
     - [Chrome](/interview/001frontend.md)
